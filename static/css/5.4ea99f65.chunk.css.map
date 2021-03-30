@@ -1,0 +1,1 @@
+{"version":3,"sources":["webpack://src/views/HomePageView/HomePageView.module.css"],"names":[],"mappings":"AAAA,wBACE,aAAc,CACd,iBAAkB,CAClB,gBAAiB,CACjB,UAAW,CACX,YAEF","file":"5.4ea99f65.chunk.css","sourcesContent":[".h1{\n  display: block;\n  text-align: center;\n  margin: 50px auto;\n  width: 100%;\n  height: 100px;\n\n}"]}
