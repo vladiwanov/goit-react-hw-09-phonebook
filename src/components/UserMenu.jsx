@@ -1,14 +1,19 @@
-import { connect } from "react-redux";
+import { useCallback } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { authSelectors, authOperations } from '../redux/auth';
 
-const UserMenu = ({name,  onLogout}) => {
-  
+export default function UserMenu () {
+  const dispatch = useDispatch();
+
+  const name = useSelector(authSelectors.userName)
+  const onLogout = useCallback (() => dispatch(authOperations.logOut()),[dispatch])
+
+
   return (
     <nav className='userMenu'>
       <h3 className="h3" >Welcome {name}</h3>
       <button
         type='button'
-        // className="logoutbutton"
         className="button"
         onClick={onLogout}
       >
@@ -17,18 +22,3 @@ const UserMenu = ({name,  onLogout}) => {
     </nav>
   )
 }
-
-const mapStateToProps = state => ({
-  name: authSelectors.userName(state),
-})
-// const mapDispatchToProps = dispatch => {
-//   return {
-//     onLogout: () => dispatch(authOperations.logOut())
-//   }
-// }
-
-const mapDispatchToProps = {
-  onLogout:authOperations.logOut
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(UserMenu);

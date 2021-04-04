@@ -1,15 +1,33 @@
 .alert{
   position: absolute;
   top: 0px;
-  right: 80px;
-  width: 300px;
-  height: 50px;
+  right: center;
+  width: 450px;
+  height: 80px;
   background-color: red;
   border-radius: 4px;
-  color:#fff;
-  font-size: 16px;
-  font-weight: 600;
+  color:yellow;
+  font-size: 22px;
+  font-weight: 500;
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.enter{
+  transform: translateX(100%);
+}
+
+.enterActive{
+  transform: translateX(0);
+  transition: all 250ms linear;
+}
+
+.exit{
+  transform: translateX(0);
+}
+
+.exitActive{
+  transform: translateX(100%);
+  transition: all 250ms linear;
 }

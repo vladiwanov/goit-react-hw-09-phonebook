@@ -1,21 +1,21 @@
-import { connect } from "react-redux";
+import {useSelector } from "react-redux";
 import { Redirect, Route } from "react-router";
 import{authSelectors} from '../redux/auth'
 
-const PrivatRoute = ({
-  component: Component,
+export default function PrivatRoute({
   isAuthed,
   redirectTo,
+  children,
   ...routeProps
-}) => (<Route
-  {...routeProps}
-  render={props => isAuthed ? <Component {...props} /> : <Redirect to={redirectTo} />
-  }
-/>
-)
+}) {
+  const isloggedIn = useSelector(authSelectors.getAuthed)
+  return (
+    <Route
+      {...routeProps}>
+      {isloggedIn ?  children  : <Redirect to={redirectTo} />}
+    </Route>
+      
+  )
+}
 
-const mapStateToProps = state => ({
-  isAuthed: authSelectors.getAuthed(state)
-}) 
 
-export default connect(mapStateToProps)(PrivatRoute);

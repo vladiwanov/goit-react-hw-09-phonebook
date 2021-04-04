@@ -1,89 +1,99 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import Alert from '../Alert/Alert';
-// import operations from '../../redux/contacts-operations';
 import s from './ContactForm.module.css';
 import { CSSTransition } from 'react-transition-group';
-import {contactsSelectors, contactsOperations} from '../../redux/contacts';
-class ContactForm extends Component {
-  state = {
-    name: '',
-    // name: null,
-    number: '',
-    isDuplicate: false,
-    alert:'',
-  };
+import { contactsSelectors, contactsOperations } from '../../redux/contacts';
 
-  handleChange = e => {
-    const { name, value } = e.currentTarget;
-    this.setState({ [name]: value });
-  };
 
-  formSubmit = e => {
-    e.preventDefault();
-    const { name, number } = this.state;
-    
-    if (this.props.contactList.find(item => item.name === name)) {
-      this.setState({ alert: 'Contact already exist' });
-      this.showAlert();
+export default function ContactForm() {
+  const dispatch = useDispatch();
+  const contactList = useSelector(contactsSelectors.getContactlist)
+  const onSubmit = () => dispatch(contactsOperations.addContact({ name, number }))
+  
+  const [name, setName] = useState('')
+  const [number, setNumber] = useState('')
+  const [alert, setAlert] = useState('')
+  const [isDplt, setIsDplt] = useState(false);
+  
+const handleChange = (e) => {
+    const { name, value } = e.target;
+    switch (name) {
+      case 'name':
+        setName(value);
+        break
+      case 'number':
+        setNumber(value); break;
+      default: console.warn('wrong place');
+  }
+}
+  
+  const formSubmit = e => {
+    e.preventDefault();  
+    if (contactList.find(item => item.name.toLowerCase() === name.toLowerCase()))
+    {
+      setAlert('Contact already exist');
+      showAlert();
       return;
     }
     if (name.trim() === '' || name === null) {
-    this.setState({ alert: 'введите слово' });
-      this.showAlert()
+      setAlert('введите слово');
+      showAlert()
       return
     }
-    this.props.onSubmit({ name, number });
-      this.resetForm();
-      return
+    onSubmit();
+    resetForm();
+    return
     };
 
  
-  showAlert = () => {
-
-    this.setState({ isDuplicate: true });
-    setTimeout(() => this.setState({ isDuplicate: false }), 3000);
-    this.resetForm();
+  const showAlert = () => {
+    setIsDplt(true)
+    setTimeout(() => {
+      setIsDplt(false);
+      resetForm();
+    }, 2000);
 }
 
-  resetForm = () => {
-    this.setState({ name: '', number: '', });
-  };
+  const resetForm = () => {
+    setName('');
+    setNumber('');
+    setIsDplt(false)
+    setAlert('')
+  }
 
-  render() {
-    const { isDuplicate, alert} = this.state;
     return (
       <>
-        <CSSTransition in={isDuplicate} classNames={s} unmountOnExit timeout={250} >
+        <CSSTransition in={isDplt} classNames={s} unmountOnExit timeout={250} >
           <Alert text={alert}/>
         </CSSTransition>
         
-        <form className={s.form} onSubmit={this.formSubmit}>
-          <label htmlFor={this.nameInputId} className={s.label}>
+        <form className={s.form} onSubmit={formSubmit}>
+          <label  className={s.label}>
             Name
             <input
               className={s.input}
               type="text"
               name="name"
-              value={this.state.name}
-              onChange={this.handleChange}
+              value={name}
+              onChange={handleChange}
             />
           </label>
-          <label htmlFor={this.numberInputId} className={s.label}>
+          <label className={s.label}>
             Number
             <input
               className={s.input}
               type="tel"
               name="number"
-              value={this.state.number}
-              onChange={this.handleChange}
+              value={number}
+              onChange={handleChange}
             />
           </label>
           <button
             className={s.button}
             type="submit"
-            disabled={!this.state.name.trim()}
-            
+            // disabled={!name.trim()}
+            disabled={!name}
           >
             Add contact
           </button>
@@ -91,17 +101,3 @@ class ContactForm extends Component {
       </>
     );
   }
-}
-
-
-const mapStateToProps = state => {
-  return { contactList: contactsSelectors.getContactlist(state) }}
-  
-
-const mapDispatchToProps = dispatch => {
-  return {
-    onSubmit: (item) => dispatch(contactsOperations.addContact(item))
-  }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(ContactForm);

@@ -1,11 +1,13 @@
-import { connect } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import s from './Filter.module.css';
 import {changeFilter} from '../../redux/contacts/contacts-actions';
-// import {contactsActions} from '../../redux/contacts';
-// const { changeFilter } = contactsActions;
-// console.log('12345678965432567896543::::', contactsActions);
 
-const Filter = ({onChange }) => (
+export default function Filter() {
+   const dispatch = useDispatch()
+   const onChange = (e) => dispatch(changeFilter(e.target.value));
+
+  
+  return(
   <section className={s.filter}>
     <p className={s.filterName}>
       Find contact by name
@@ -18,12 +20,9 @@ const Filter = ({onChange }) => (
       />
     </label>
   </section>
-);
+);}
 
-const mapDispachToProps = dispatch => ({
-  onChange: (event) => dispatch(changeFilter(event.target.value))
-})
-export default connect(null, mapDispachToProps)(Filter);
+
 
 
 

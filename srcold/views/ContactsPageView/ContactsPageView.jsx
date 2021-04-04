@@ -1,10 +1,10 @@
-import ContactForm from './components/ContactForm';
-import ContactList from './components/ContactList';
-import Filter from './components/Filter/Filter';
-import s from './App.module.css';
+import ContactForm from '../../components/ContactForm';
+import ContactList from '../../components/ContactList';
+import Filter from '../../components/Filter/Filter';
+import s from './ContactsPageView.module.css';
 import { CSSTransition } from 'react-transition-group';
 import { connect } from 'react-redux';
-import {contactsSelectors, contactsOperations} from './redux/contacts';
+import {contactsSelectors, contactsOperations} from '../../redux/contacts';
 
 
 const App = ({items, isloading}) => (

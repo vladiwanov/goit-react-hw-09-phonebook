@@ -1,11 +1,14 @@
-import PropTypes from 'prop-types';
 import ContactsItem from '../ContactsItem';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import s from './ContactList.module.css';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import {contactsSelectors} from '../../redux/contacts';
 
-const ContactList = ({list}) => (
+export default function ContactList() {
+
+  const list = useSelector(contactsSelectors.getFilteredContacts)
+
+  return(
   <section className={s.contacts}>
     <TransitionGroup component="ul" className={s.list} >
       {list.map(item => (
@@ -15,20 +18,4 @@ const ContactList = ({list}) => (
       ))}
     </TransitionGroup>
   </section>
-);
-
-ContactList.propTypes = {
-  list: PropTypes.arrayOf(
-    PropTypes.exact({
-      id: PropTypes.string.isRequired,
-      number: PropTypes.string.isRequired,
-      name: PropTypes.string.isRequired,
-    }),
-  ).isRequired,
-};
-
-const mapStateToProps = state => ({
-  list: contactsSelectors.getFilteredContacts(state)
-});
-
-export default  connect(mapStateToProps)(ContactList);
+  )};

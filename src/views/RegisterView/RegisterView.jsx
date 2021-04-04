@@ -1,73 +1,108 @@
-import { Component } from 'react';
-import { connect } from 'react-redux';
-import { authOperations } from '../../redux/auth';
+import { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { authOperations , authSelectors} from '../../redux/auth';
 import s from './RegisterView.module.css';
+import { addAuthError } from '../../redux/auth/auth-actions';
+import AlertMessage from '../../components/Alert/AlertMessage';
 
-class SignUp  extends Component {
-  state = {
-    name: '',
-    email: '',
-    password: '',
-    
+
+export default  function SignUp (){
+const dispatch = useDispatch();
+  const errorState = useSelector(authSelectors.getError);
+  const onSubmit = () => dispatch(authOperations.addRegister({ name, email, password }))
+  
+
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [errorStatus, setErrorStatus] = useState(false);
+  
+
+  useEffect(() => {
+  console.log('ошибка с бека...',errorState);
+  errorState ? showAlert(): setErrorStatus(false)
+  },)
+  
+
+  const showAlert = () => {
+    setErrorStatus(true);
+    setTimeout(() => {
+      resetForm();
+      dispatch(addAuthError(null))
+    }, 2000);
   }
   
-  onHandleChange = ({ target: { name, value } }) => {
-    this.setState({ [name]: value, bull: true, })
-    
+  const resetForm = () => {
+    setName('');
+    setEmail('');
+    setPassword('');
+    setErrorStatus(false);
+  };
+
+  
+  const onHandleChange = ({ target: { name, value } }) => {
+    switch (name) {
+      case 'name':
+        setName(value)
+        break
+      case 'email':
+        setEmail(value)
+        break
+      case 'password':
+        setPassword(value)
+        break
+      default: console.log('incorrect place')
     }
-  
-  
-  handleSubmit = (e) => {
-      e.preventDefault();
-    this.props.onAuthSubmit(this.state)
-
-    this.setState({ name: '', email: '', password: '', });
   }
+ 
+  const onHandleSubmit = (e) => {
+    e.preventDefault();
+    onSubmit()
+    }
 
-
-  render() {
-      const { name, email, password, } = this.state;
-      
       return (
         <>
           
           <div className={s.registerForm} >
             <h2>Регистрация пользователя</h2>
+            {errorStatus && <AlertMessage alert={`ошибка регистрации пользователя. ${errorState}`} />}
             <form
               className = {s.formContent}
-              onSubmit={this.handleSubmit}
+              onSubmit={onHandleSubmit}
               autoComplete='off'
             >
+              <label >
+              <input
+                  className={s.formInput}
+                  type="text"
+                  name="name"
+                  value={name}
+                  onChange={onHandleChange}
+                  placeholder='Name'
+                />
+            </label>
             <label >
               <input
-              className={s.formInput}
-                type="text"
-                name="name"
-                value={name}
-                onChange={this.onHandleChange}
+                  className={s.formInput}
+                  type="email"
+                  name='email'
+                  value={email}
+                  onChange={onHandleChange}
+                  placeholder='Email'
               />
             </label>
             <label >
               <input
-              className={s.formInput}
-                type="email"
-                name='email'
-                value={email}
-                onChange={this.onHandleChange}
-              />
-            </label>
-            <label >
-              <input
-              className={s.formInput}
-                type="password"
-                name='password'
-                value={password}
-                onChange={this.onHandleChange}
+                  className={s.formInput}
+                  type="password"
+                  name='password'
+                  value={password}
+                  onChange={onHandleChange}
+                  placeholder='Password'
               />
             </label>
             <button
                 type="submit"
-                // className={s.formRegisterButton}
                 className={s.button}
                 disabled={!name||!email||!password}
                 
@@ -79,13 +114,3 @@ class SignUp  extends Component {
         </>
       )
     }
-  }
-
-
-  const mapDispatchToProps = dispatch => {
-  return {
-    onAuthSubmit: (item) => dispatch(authOperations.addRegister(item))
-  }
-}
-
-    export default connect(null, mapDispatchToProps)(SignUp);

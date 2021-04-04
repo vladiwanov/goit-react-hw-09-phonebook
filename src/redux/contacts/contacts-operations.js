@@ -24,10 +24,10 @@ const fetchContacts = () => async dispatch => {
   }
 };
 
-const fethContactAsync = createAsyncThunk('contacts/fetchContact', async () => {
-  const { data } = await axios.get('./contacts');
-  return data;
-});
+// const fethContactAsync = createAsyncThunk('contacts/fetchContact', async () => {
+//   const { data } = await axios.get('./contacts');
+//   return data;
+// });
 
 const addContact = item => dispatch => {
   dispatch(addContactRequest());
@@ -50,5 +50,5 @@ export default {
   fetchContacts,
   addContact,
   deleteContact,
-  fethContactAsync,
+  // fethContactAsync,
 };

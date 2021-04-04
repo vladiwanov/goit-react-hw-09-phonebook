@@ -1,13 +1,14 @@
 
 import Navigation from './Navigation';
 import AuthNav from './AuthNav'
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import {authSelectors} from '../redux/auth';
-// import ContactsPageView from '../views/ContactsPageView';
 import UserMenu from './UserMenu';
 
 
-const AppBar = ({ isAuthed = false }) => {
+export default function AppBar (){
+  const isAuthed = useSelector(authSelectors.getAuthed)
+
   return (
     <header className="app-bar" >
       <Navigation className="items" />
@@ -15,8 +16,3 @@ const AppBar = ({ isAuthed = false }) => {
     </header>
   )
 }
-
-const mapStateToProps = (state) => ({ isAuthed: authSelectors.getAuthed(state) })
-
-
-export default connect(mapStateToProps)(AppBar);

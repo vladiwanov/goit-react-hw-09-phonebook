@@ -1,24 +1,22 @@
 import { AiOutlineClose } from 'react-icons/ai';
 import s from './ContactsItem.module.css';
 import {contactsOperations} from '../../redux/contacts';
-import { connect } from 'react-redux';
+import { useDispatch } from 'react-redux';
 
-const ContactsItem = ({ item , onDelete }) => {
+export default function ContactsItem({item:{name,number,id}}) {
+
+  const dispatch = useDispatch()
+  const onDelete = () => dispatch(contactsOperations.deleteContact(id))
+
   return (
     <>
         <li className={s.item}>
-          <p className={s.stringElem}>{item.name}:</p>
-          <p>{item.number}</p>
-          <button className={s.button} type="button" onClick={() => onDelete(item.id)}>
+          <p className={s.stringElem}>{name}:</p>
+          <p>{number}</p>
+          <button className={s.button} type="button" onClick={onDelete}>
             <AiOutlineClose className={s.icon} />
           </button>
         </li>
     </>
   )
 }
-
-const mapDispatchToProps = dispatch => ({
-  onDelete: (id)=>dispatch(contactsOperations.deleteContact(id))
-})
-
-export default connect(null, mapDispatchToProps) (ContactsItem)
