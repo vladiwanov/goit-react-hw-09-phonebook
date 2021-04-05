@@ -15,7 +15,7 @@ export default function Filter() {
     <label>
       <input
         className={s.input}
-        type="text"
+        type='value'
         onChange={onChange}
       />
     </label>
